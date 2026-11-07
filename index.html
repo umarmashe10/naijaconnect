@@ -81,13 +81,13 @@ document.addEventListener("input",e=>{const m={fq:"q",fc:"cat",fs:"state",fo:"so
 document.addEventListener("submit",async e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target)),id=e.target.id,btn=e.target.querySelector("button:last-of-type");
 if(id==="hs"){F={q:f.q,cat:"",state:f.state,sort:"price"};location.hash="search";return}
 if(btn)btn.disabled=true;
-try{if(id==="jf"){const{data,error}=await SB.auth.signUp({email:f.email,password:f.password,options:{data:{full_name:f.name,role}}});if(error)throw error;
+try{if(id==="jf"){toast("Creating account…");const{data,error}=await SB.auth.signUp({email:f.email,password:f.password,options:{data:{full_name:f.name,role}}});if(error)throw error;
 if(!data.session){toast("Account created. Check your email to confirm it, then log in.");location.hash="login"}else location.hash="me"}
-if(id==="lf"){const{error}=await SB.auth.signInWithPassword({email:f.email,password:f.password});if(error)throw error;location.hash="me"}
+if(id==="lf"){toast("Logging in…");const{error}=await SB.auth.signInWithPassword({email:f.email,password:f.password});if(error)throw error;location.hash="me"}
 if(id==="pf"){const{error}=await SB.from("profiles").update({whatsapp:f.wa.replace(/\D/g,""),state:f.state,city:f.city}).eq("id",profile.id);if(error)throw error;await loadMe();await loadServices();render(true);toast("Saved")}
 if(id==="sf2"){toast("Publishing…");const c=cats.find(x=>x.slug===f.cat);if(!c)throw new Error("Categories not loaded. Refresh the page and try again.");const{error}=await SB.from("services").insert({provider_id:profile.id,category_id:c.id,title:f.title,description:f.desc,price_from:Number(f.price)||null,state:f.state,city:f.city});if(error)throw error;await loadServices();e.target.reset();render(true);toast("Service published")}}
 catch(x){toast(x.message||"Something went wrong")}finally{if(btn)btn.disabled=false}});
 addEventListener("hashchange",()=>render());
-SB.auth.onAuthStateChange(async(_,s)=>{session=s;await loadMe();await loadServices();render(true)});
+SB.auth.onAuthStateChange((_,s)=>{session=s;setTimeout(async()=>{await loadMe();await loadServices();render(true)},0)});
 (async()=>{render();const c=await SB.from("categories").select("id,name,slug").eq("is_active",true).order("id");cats=c.data||[];await loadServices();render(true)})();
 </script></body></html>
