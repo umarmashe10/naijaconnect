@@ -35,7 +35,7 @@ footer{text-align:center;color:var(--mut);font-size:13px;padding:30px 16px}.hear
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head><body>
 <header><div class="bar"><a class="logo" href="#home">Naija<b>Connect</b></a><nav id="nav"></nav></div></header>
-<main id="app"></main><footer>© 2026 NaijaConnect · Made in Nigeria 🇳🇬 · v4</footer>
+<main id="app"></main><footer>© 2026 NaijaConnect · Made in Nigeria 🇳🇬 · v5</footer>
 <script>
 const SB=supabase.createClient("https://dmfwihcovowpqodksvhv.supabase.co","sb_publishable_L6O8O10X8NTJN_4vq3LEpQ_Z9u0LpJ1",{auth:{lock:async(n,t,fn)=>await fn()}});
 const ICONS={electricians:"⚡",plumbers:"🔧","graphic-designers":"🎨",tailors:"🧵","hair-barbers":"💈",cleaners:"✨",photographers:"📷","web-developers":"💻",mechanics:"🚗","event-planners":"🎉"};
@@ -58,6 +58,7 @@ home(){const f=services.slice(0,6);return`<section class="hero"><h1>Find trusted
 search(){return`<div class="wrap"><h2 style="margin-top:28px">Find a service</h2><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))"><input id="fq" placeholder="Search…" value="${esc(F.q)}"><select id="fc">${opts(catOpts(),F.cat,"All categories")}</select><select id="fs">${opts(STATES,F.state,"All states")}</select><select id="fo"><option value="price">Lowest price</option><option value="high"${F.sort==="high"?" selected":""}>Highest price</option></select></div><div id="res" style="margin-top:14px"></div></div>`},
 login(){return`<form class="panel" id="lf"><h2 style="margin:0">Welcome back</h2><input name="email" type="email" required placeholder="Email"><input name="password" type="password" required placeholder="Password"><button class="btn">Log in</button><p class="mut" style="margin:0;text-align:center">New here? <a href="#join">Create an account</a></p></form>`},
 join(){return`<form class="panel" id="jf"><h2 style="margin:0">Create your account</h2><div class="tabs"><button type="button" class="btn ghost" data-role="customer" id="rc">I need a service</button><button type="button" class="btn ghost" data-role="provider" id="rp">I offer services</button></div><input name="name" required maxlength="100" placeholder="Full name"><input name="email" type="email" required placeholder="Email"><input name="password" type="password" required minlength="8" placeholder="Password (8+ characters)"><div class="note" id="jn"></div><button class="btn">Create account</button><p class="mut" style="margin:0;text-align:center">Have an account? <a href="#login">Log in</a></p></form>`},
+admin(){if(!profile||profile.role!=="admin")return`<div class="panel"><h2 style="margin:0">Admins only</h2><p class="mut">You need an admin account to see this page.</p></div>`;return`<div class="wrap"><h2 style="margin-top:28px">Admin dashboard</h2><div id="adm"><p class="mut">Loading…</p></div></div>`},
 me(){if(!session)return V.login();if(!profile)return`<div class="panel"><p class="mut">Loading your account…</p></div>`;
 let h=`<div class="panel"><h2 style="margin:0">Hello, ${esc(profile.full_name||"there")} 👋</h2><p class="mut" style="margin:0">Signed in as a <b>${esc(profile.role)}</b>${profile.role==="provider"?" · status: <b>"+esc(profile.status)+"</b>":""}</p>${profile.role==="provider"&&profile.status!=="approved"?'<div class="note">Your account is awaiting approval. Your listings go public once approved.</div>':""}</div>`;
 if(profile.role==="provider"){const mine=services.filter(s=>s.provider_id===profile.id);
@@ -67,11 +68,27 @@ h+=`<form class="panel" id="pf"><h3 style="margin:0">Your business details</h3><
 else{const sv=services.filter(s=>favs.includes(s.provider_id));h+=`<div class="wrap"><h3>Saved providers</h3><div class="grid auto">${sv.map(card).join("")||'<p class="mut">Tap the heart on a listing to save a provider.</p>'}</div></div>`}return h}};
 function setRole(r){role=r;const a=$("#rc"),b=$("#rp");if(!a)return;a.className="btn "+(r==="customer"?"":"ghost");b.className="btn "+(r==="provider"?"":"ghost");$("#jn").textContent=r==="provider"?"Provider accounts are reviewed by our team before going live.":"Customers can search, save favourites and contact providers on WhatsApp."}
 function render(keep){const v=(location.hash||"#home").slice(1);const k=V[v]?v:"home";const y=scrollY;$("#app").innerHTML=V[k]();
-$("#nav").innerHTML=`<a href="#search">Find services</a>`+(session?`<a href="#me">Account</a><button class="lnk" id="out">Log out</button>`:`<a href="#login">Log in</a><a href="#join">Join</a>`);
-if(k==="search")results();if(k==="join")setRole(role);keep?scrollTo(0,y):scrollTo(0,0)}
+$("#nav").innerHTML=`<a href="#search">Find services</a>`+(session?`<a href="#me">Account</a>${profile&&profile.role==="admin"?'<a href="#admin">Admin</a>':""}<button class="lnk" id="out">Log out</button>`:`<a href="#login">Log in</a><a href="#join">Join</a>`);
+if(k==="search")results();if(k==="join")setRole(role);if(k==="admin")loadAdmin();keep?scrollTo(0,y):scrollTo(0,0)}
+function admBtn(a,id,t){return`<button class="btn ghost" style="padding:7px 12px;font-size:13px" data-adm="${a}" data-id="${esc(id)}">${t}</button>`}
+async function loadAdmin(){const el=$("#adm");if(!el||!profile||profile.role!=="admin")return;
+const cnt=(t,f)=>{let q=SB.from(t).select("*",{count:"exact",head:true});if(f)q=f(q);return q.then(r=>r.count||0)};
+const[u,p,pe,sv,iq,pr,sr]=await Promise.all([cnt("profiles"),cnt("profiles",q=>q.eq("role","provider")),cnt("profiles",q=>q.eq("role","provider").eq("status","pending")),cnt("services"),cnt("inquiries"),SB.from("profiles").select("id,full_name,role,status,state,whatsapp,created_at").order("created_at",{ascending:false}).limit(100),SB.from("services").select("id,title,state,profiles(full_name)").order("created_at",{ascending:false}).limit(100)]);
+const st=[["Users",u],["Providers",p],["Pending",pe],["Listings",sv],["Inquiries",iq]],users=pr.data||[],svcs=sr.data||[];
+const row=x=>`<div class="card"><b>${esc(x.full_name||"No name")}</b><span class="mut">${esc(x.role)} · ${esc(x.status)}${x.state?" · "+esc(x.state):""}${x.whatsapp?" · "+esc(x.whatsapp):""}</span><div class="row" style="justify-content:flex-start;flex-wrap:wrap">${x.role==="provider"&&x.status!=="approved"?admBtn("approve",x.id,"Approve"):""}${x.role==="provider"&&x.status==="pending"?admBtn("reject",x.id,"Reject"):""}${x.role==="provider"&&x.status==="approved"?admBtn("suspend",x.id,"Suspend"):""}${x.role!=="admin"&&x.id!==profile.id?admBtn("delete",x.id,"Delete user"):""}</div></div>`;
+el.innerHTML=`<div class="grid g2 g5" style="margin-bottom:8px">${st.map(s=>`<div class="cat"><i>${s[1]}</i>${s[0]}</div>`).join("")}</div><h3>Waiting for approval</h3><div class="grid auto">${users.filter(x=>x.role==="provider"&&x.status==="pending").map(row).join("")||'<p class="mut">Nobody waiting.</p>'}</div><h3>All users (newest first)</h3><div class="grid auto">${users.map(row).join("")}</div><h3>All listings</h3><div class="grid auto">${svcs.map(s=>`<div class="card"><b>${esc(s.title)}</b><span class="mut">${esc(s.profiles?.full_name||"")} · ${esc(s.state)}</span><div class="row" style="justify-content:flex-start">${admBtn("rmsvc",s.id,"Remove listing")}</div></div>`).join("")||'<p class="mut">No listings.</p>'}</div>`}
+async function admAct(b){const a=b.dataset.adm,id=b.dataset.id;
+if(a!=="approve"&&b.dataset.sure!=="1"){b.dataset.sure="1";b.dataset.t=b.textContent;b.textContent="Tap again to confirm";setTimeout(()=>{b.dataset.sure="";b.textContent=b.dataset.t},5000);return}
+b.disabled=true;let r;
+if(a==="approve")r=await SB.from("profiles").update({status:"approved"}).eq("id",id);
+if(a==="reject")r=await SB.from("profiles").update({status:"rejected"}).eq("id",id);
+if(a==="suspend")r=await SB.from("profiles").update({status:"suspended"}).eq("id",id);
+if(a==="delete")r=await SB.rpc("admin_delete_user",{target:id});
+if(a==="rmsvc")r=await SB.from("services").delete().eq("id",id);
+toast(r&&r.error?"Error: "+r.error.message:"Done");await loadServices();await loadAdmin()}
 async function loadServices(){const{data}=await SB.from("services").select("id,title,description,price_from,state,city,is_featured,provider_id,categories(name,slug),profiles(full_name,whatsapp)").eq("is_active",true).order("is_featured",{ascending:false}).order("created_at",{ascending:false}).limit(200);services=data||[]}
 async function loadMe(){if(!session){profile=null;favs=[];return}const u=session.user.id;const{data}=await SB.from("profiles").select("*").eq("id",u).maybeSingle();profile=data;const f=await SB.from("favourites").select("provider_id").eq("customer_id",u);favs=(f.data||[]).map(x=>x.provider_id)}
-document.addEventListener("click",async e=>{if(e.target.id==="out"){await SB.auth.signOut();location.hash="home";return}
+document.addEventListener("click",async e=>{const ab=e.target.closest("[data-adm]");if(ab){admAct(ab);return}if(e.target.id==="out"){await SB.auth.signOut();location.hash="home";return}
 const t=e.target.closest("[data-cat],[data-role],[data-fav]");if(!t)return;
 if(t.dataset.cat){F={q:"",cat:t.dataset.cat,state:"",sort:"price"};if(location.hash==="#search")render();else location.hash="search"}
 if(t.dataset.role)setRole(t.dataset.role);
