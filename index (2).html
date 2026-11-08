@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NaijaConnect: trusted service providers across Nigeria</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'unsafe-inline'; connect-src https://dmfwihcovowpqodksvhv.supabase.co; img-src data: https://dmfwihcovowpqodksvhv.supabase.co; base-uri 'none'; form-action 'none'">
+<meta name="description" content="Find electricians, plumbers, designers, tailors and more across Nigeria and chat on WhatsApp.">
+<style>
+:root{--bg:#FBFAF6;--card:#fff;--ink:#14211A;--mut:#5d6b63;--line:#e6e4dc;--g:#0B6B3A;--g2:#064226;--gold:#F5B301;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1713;--card:#18231c;--ink:#eef3ef;--mut:#9fb0a6;--line:#27362d;color-scheme:dark}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{position:sticky;top:0;z-index:50;background:var(--card);border-bottom:1px solid var(--line)}
+.bar,.wrap{max-width:1100px;margin:auto;padding:0 16px}.bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2px 12px;min-height:58px;padding-top:6px;padding-bottom:6px}nav{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:0 16px}
+.logo{flex-shrink:0;font-weight:800;font-size:20px;color:var(--g);text-decoration:none}.logo b{color:var(--gold)}
+nav a,nav button.lnk{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px;padding:8px 0;background:none;border:0;cursor:pointer;font-family:inherit}
+.btn{display:inline-block;border:0;border-radius:999px;padding:11px 20px;font:700 15px inherit;font-family:inherit;cursor:pointer;text-decoration:none;background:var(--g);color:#fff}
+.gold{background:var(--gold);color:#14211A}.wa{background:#25D366;color:#fff;padding:9px 16px;font-size:14px}.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.hero{background:linear-gradient(135deg,var(--g),var(--g2));color:#fff;padding:56px 16px 48px;text-align:center}
+.hero h1{font-size:clamp(30px,7vw,52px);line-height:1.1;margin:0 auto;max-width:760px;animation:up .6s both}.hero h1 span{color:var(--gold)}
+.hero p{opacity:.85;max-width:560px;margin:14px auto 0;animation:up .6s .1s both}
+.sf{display:grid;gap:10px;max-width:760px;margin:26px auto 0;background:rgba(255,255,255,.12);padding:10px;border-radius:18px;animation:up .6s .2s both}
+@media(min-width:640px){.sf{grid-template-columns:1fr 190px auto}}
+input,select,textarea{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
+h2{font-size:24px;margin:44px 0 16px}.grid{display:grid;gap:14px}.g2{grid-template-columns:repeat(2,1fr)}.auto{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+@media(min-width:640px){.g5{grid-template-columns:repeat(5,1fr)}.g3{grid-template-columns:repeat(3,1fr)}}
+.cat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 8px;text-align:center;font-weight:600;font-size:14px;cursor:pointer;transition:.2s}.cat:hover{transform:translateY(-3px)}.cat i{display:block;font-style:normal;font-size:28px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:6px;animation:up .5s both}
+.tag{font-size:12px;font-weight:700;background:rgba(11,107,58,.12);color:var(--g);border-radius:99px;padding:3px 10px}.feat{background:var(--gold);color:#14211A}
+.mut{color:var(--mut);font-size:14px}.price{font-weight:800;color:var(--g)}.row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:auto;padding-top:8px}
+.cta{background:#14211A;color:#fff;border-radius:24px;padding:40px 20px;text-align:center;margin:44px 0}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;max-width:520px;margin:28px auto;display:grid;gap:12px}
+.tabs{display:flex;gap:8px}.tabs button{flex:1}.note{background:rgba(245,179,1,.15);border-radius:12px;padding:12px;font-size:14px}
+footer{text-align:center;color:var(--mut);font-size:13px;padding:30px 16px}.heart{background:none;border:0;font-size:20px;cursor:pointer}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+</head><body>
+<header><div class="bar"><a class="logo" href="#home">Naija<b>Connect</b></a><nav id="nav"></nav></div></header>
+<main id="app"></main><footer>© 2026 NaijaConnect · Made in Nigeria 🇳🇬 · v8</footer>
+<script>
+const SB=supabase.createClient("https://dmfwihcovowpqodksvhv.supabase.co","sb_publishable_L6O8O10X8NTJN_4vq3LEpQ_Z9u0LpJ1",{auth:{lock:async(n,t,fn)=>await fn()}});
+const ICONS={electricians:"⚡",plumbers:"🔧","graphic-designers":"🎨",tailors:"🧵","hair-barbers":"💈",cleaners:"✨",photographers:"📷","web-developers":"💻",mechanics:"🚗","event-planners":"🎉"};
+const STATES="Abia,Adamawa,Akwa Ibom,Anambra,Bauchi,Bayelsa,Benue,Borno,Cross River,Delta,Ebonyi,Edo,Ekiti,Enugu,FCT Abuja,Gombe,Imo,Jigawa,Kaduna,Kano,Katsina,Kebbi,Kogi,Kwara,Lagos,Nasarawa,Niger,Ogun,Ondo,Osun,Oyo,Plateau,Rivers,Sokoto,Taraba,Yobe,Zamfara".split(",");
+const TEST=[["Chioma A.","Lagos","Found a tailor in minutes and she replied on WhatsApp straight away."],["Tunde B.","Abuja","My wiring was fixed the same day. Very easy to use."],["Ngozi E.","Enugu","As a photographer I now get new clients every week."]];
+let session=null,profile=null,services=[],cats=[],favs=[],F={q:"",cat:"",state:"",sort:"price"},role="customer",editId=null,inq=[];
+function toast(m){const d=document.createElement("div");d.textContent=m;d.style.cssText="position:fixed;left:16px;right:16px;bottom:24px;z-index:99;background:#14211A;color:#fff;border:2px solid #F5B301;padding:14px 16px;border-radius:14px;font-weight:600;text-align:center";document.body.appendChild(d);setTimeout(()=>d.remove(),7000)}
+addEventListener("error",e=>toast("Error: "+e.message));addEventListener("unhandledrejection",e=>toast("Error: "+(e.reason&&e.reason.message||e.reason)));
+const $=s=>document.querySelector(s),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const naira=n=>n?"₦"+Number(n).toLocaleString("en-NG"):"Ask for price";
+const opts=(a,sel,all)=>(all?`<option value="">${all}</option>`:"")+a.map(x=>{const v=Array.isArray(x)?x[0]:x,l=Array.isArray(x)?x[1]:x;return`<option value="${esc(v)}"${String(v)===String(sel)?" selected":""}>${esc(l)}</option>`}).join("");
+const catOpts=()=>cats.map(c=>[c.slug,c.name]);
+function card(s){const p=s.profiles||{},c=s.categories||{};const wa=p.whatsapp?`https://wa.me/${encodeURIComponent(p.whatsapp)}?text=${encodeURIComponent("Hi, I found “"+s.title+"” on NaijaConnect.")}`:"";
+return`<div class="card"><div><span class="tag">${esc(c.name||"Service")}</span> ${s.is_featured?'<span class="tag feat">Featured</span>':""}</div><h3 style="margin:6px 0 0">${esc(s.title)}</h3><div class="mut">${esc(s.description)}</div><div class="mut">📍 ${esc([s.city,s.state].filter(Boolean).join(", "))} · by ${avImg(p.avatar_url)}${esc(p.full_name||"Provider")}</div><div class="row"><span class="price">${s.price_from?"From "+naira(s.price_from):"Ask for price"}</span><span style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><button class="heart" data-fav="${esc(s.provider_id)}" aria-label="Save provider">${favs.includes(s.provider_id)?"❤️":"🤍"}</button>${profile&&profile.id===s.provider_id?"":`<button class="btn ghost" style="padding:9px 14px;font-size:14px" data-req="${esc(s.id)}">Request</button>`}${wa?`<a class="btn wa" target="_blank" rel="noopener" href="${wa}">WhatsApp</a>`:""}</span></div></div>`}
+function results(){const q=F.q.toLowerCase();let r=services.filter(s=>(!F.cat||s.categories?.slug===F.cat)&&(!F.state||s.state===F.state)&&(!q||(s.title+" "+(s.description||"")+" "+(s.categories?.name||"")).toLowerCase().includes(q)));
+r.sort((a,b)=>F.sort==="high"?(b.price_from||0)-(a.price_from||0):(a.price_from||1e12)-(b.price_from||1e12));
+const el=$("#res");if(el)el.innerHTML=`<p class="mut">${r.length} result(s)</p><div class="grid auto">${r.map(card).join("")||'<p class="mut">No matches yet. Try another search.</p>'}</div>`}
+const V={
+home(){const f=services.slice(0,6);return`<section class="hero"><h1>Find trusted professionals <span>anywhere in Nigeria</span></h1><p>Electricians, tailors, designers and more. Compare prices and chat on WhatsApp.</p><form class="sf" id="hs"><input name="q" placeholder="What do you need? e.g. plumber"><select name="state">${opts(STATES,"","All states")}</select><button class="btn gold">Search</button></form></section><div class="wrap"><h2>Popular categories</h2><div class="grid g2 g5">${cats.map(c=>`<div class="cat" data-cat="${esc(c.slug)}"><i>${ICONS[c.slug]||"🛠️"}</i>${esc(c.name)}</div>`).join("")}</div><h2>Featured providers</h2><div class="grid auto">${f.map(card).join("")||'<p class="mut">No listings yet. Be the first provider!</p>'}</div><h2>What customers say</h2><div class="grid g3">${TEST.map(t=>`<div class="card"><div style="color:var(--gold)">★★★★★</div>“${t[2]}”<b class="mut">${t[0]}, ${t[1]}</b></div>`).join("")}</div><div class="cta"><h2 style="margin:0">Offer a service? Get found.</h2><p style="opacity:.75">Create a free provider profile and start receiving requests.</p><a class="btn gold" href="#join">Become a provider</a></div></div>`},
+search(){return`<div class="wrap"><h2 style="margin-top:28px">Find a service</h2><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))"><input id="fq" placeholder="Search…" value="${esc(F.q)}"><select id="fc">${opts(catOpts(),F.cat,"All categories")}</select><select id="fs">${opts(STATES,F.state,"All states")}</select><select id="fo"><option value="price">Lowest price</option><option value="high"${F.sort==="high"?" selected":""}>Highest price</option></select></div><div id="res" style="margin-top:14px"></div></div>`},
+login(){return`<form class="panel" id="lf"><h2 style="margin:0">Welcome back</h2><input name="email" type="email" required placeholder="Email"><input name="password" type="password" required placeholder="Password"><button class="btn">Log in</button><p class="mut" style="margin:0;text-align:center">New here? <a href="#join">Create an account</a></p></form>`},
+join(){return`<form class="panel" id="jf"><h2 style="margin:0">Create your account</h2><div class="tabs"><button type="button" class="btn ghost" data-role="customer" id="rc">I need a service</button><button type="button" class="btn ghost" data-role="provider" id="rp">I offer services</button></div><input name="name" required maxlength="100" placeholder="Full name"><input name="email" type="email" required placeholder="Email"><input name="password" type="password" required minlength="8" placeholder="Password (8+ characters)"><div class="note" id="jn"></div><button class="btn">Create account</button><p class="mut" style="margin:0;text-align:center">Have an account? <a href="#login">Log in</a></p></form>`},
+admin(){if(!profile||profile.role!=="admin")return`<div class="panel"><h2 style="margin:0">Admins only</h2><p class="mut">You need an admin account to see this page.</p></div>`;return`<div class="wrap"><h2 style="margin-top:28px">Admin dashboard</h2><div id="adm"><p class="mut">Loading…</p></div></div>`},
+me(){if(!session)return V.login();if(!profile)return`<div class="panel"><p class="mut">Loading your account…</p></div>`;
+let h=`<div class="panel"><h2 style="margin:0">Hello, ${esc(profile.full_name||"there")} 👋</h2><p class="mut" style="margin:0">Signed in as a <b>${esc(profile.role)}</b>${profile.role==="provider"?" · status: <b>"+esc(profile.status)+"</b>":""}</p>${profile.role==="provider"&&profile.status!=="approved"?'<div class="note">Your account is awaiting approval. Your listings go public once approved.</div>':""}</div>`;
+if(profile.role==="provider"){const mine=services.filter(s=>s.provider_id===profile.id),ed=editId?mine.find(x=>x.id===editId):null;
+h+=`${reqSection()}<div class="panel"><h3 style="margin:0">Profile photo</h3>${okAv(profile.avatar_url)?`<img src="${esc(profile.avatar_url)}" alt="Your photo" style="width:96px;height:96px;border-radius:50%;object-fit:cover">`:'<p class="mut" style="margin:0">No photo yet.</p>'}<input type="file" id="avf" accept="image/jpeg,image/png,image/webp"><p class="mut" style="margin:0">JPG, PNG or WebP. It is resized automatically.</p></div><form class="panel" id="pf"><h3 style="margin:0">Your business details</h3><input name="wa" placeholder="WhatsApp number e.g. 2348012345678" value="${esc(profile.whatsapp||"")}"><select name="state">${opts(STATES,profile.state,"State")}</select><input name="city" maxlength="80" placeholder="City / area" value="${esc(profile.city||"")}"><button class="btn">Save details</button></form>
+<form class="panel" id="sf2"><h3 style="margin:0">${ed?"Edit service":"Add a service"}</h3><input name="title" required minlength="3" maxlength="120" placeholder="Service title" value="${esc(ed?ed.title:"")}"><select name="cat">${opts(catOpts(),ed&&ed.categories?ed.categories.slug:"")}</select><input name="price" type="number" min="0" placeholder="Starting price (₦)" value="${esc(ed&&ed.price_from?ed.price_from:"")}"><select name="state">${opts(STATES,ed?ed.state:profile.state)}</select><input name="city" maxlength="80" placeholder="City / area" value="${esc(ed?ed.city:(profile.city||""))}"><textarea name="desc" rows="3" maxlength="2000" placeholder="Describe your service">${esc(ed?ed.description:"")}</textarea><button class="btn">${ed?"Save changes":"Publish service"}</button>${ed?'<button type="button" class="btn ghost" data-own="cancel">Cancel</button>':""}</form>
+<div class="wrap"><h3>Your live services</h3><div class="grid auto">${mine.map(x=>`<div>${card(x)}<div class="row" style="justify-content:flex-start;gap:8px">${ownBtn("edit",x.id,"Edit")}${ownBtn("del",x.id,"Delete")}</div></div>`).join("")||'<p class="mut">None live yet.</p>'}</div></div>`}
+else{const sv=services.filter(s=>favs.includes(s.provider_id));h+=`${reqSection()}<div class="wrap"><h3>Saved providers</h3><div class="grid auto">${sv.map(card).join("")||'<p class="mut">Tap the heart on a listing to save a provider.</p>'}</div></div>`}return h}};
+function setRole(r){role=r;const a=$("#rc"),b=$("#rp");if(!a)return;a.className="btn "+(r==="customer"?"":"ghost");b.className="btn "+(r==="provider"?"":"ghost");$("#jn").textContent=r==="provider"?"Provider accounts are reviewed by our team before going live.":"Customers can search, save favourites and contact providers on WhatsApp."}
+function render(keep){const v=(location.hash||"#home").slice(1);const k=V[v]?v:"home";const y=scrollY;$("#app").innerHTML=V[k]();
+$("#nav").innerHTML=`<a href="#search">Find services</a>`+(session?`<a href="#me">Account</a>${profile&&profile.role==="admin"?'<a href="#admin">Admin</a>':""}<button class="lnk" id="out">Log out</button>`:`<a href="#login">Log in</a><a href="#join">Join</a>`);
+if(k==="search")results();if(k==="join")setRole(role);if(k==="admin")loadAdmin();keep?scrollTo(0,y):scrollTo(0,0)}
+const SBURL="https://dmfwihcovowpqodksvhv.supabase.co";
+const okAv=u=>u&&String(u).startsWith(SBURL+"/storage/")?u:"";
+const avImg=u=>okAv(u)?`<img src="${esc(u)}" alt="" style="width:26px;height:26px;border-radius:50%;object-fit:cover;vertical-align:middle;margin:0 6px 0 4px">`:"";
+function ownBtn(a,id,t){return`<button class="btn ghost" style="padding:7px 12px;font-size:13px" data-own="${a}" data-id="${esc(id)}">${t}</button>`}
+async function ownAct(b){const a=b.dataset.own,id=b.dataset.id;
+if(a==="edit"){editId=id;render(true);const f=$("#sf2");if(f)f.scrollIntoView();return}
+if(a==="cancel"){editId=null;render(true);return}
+if(b.dataset.sure!=="1"){b.dataset.sure="1";b.dataset.t=b.textContent;b.textContent="Tap again to confirm";setTimeout(()=>{b.dataset.sure="";b.textContent=b.dataset.t},5000);return}
+b.disabled=true;const r=await SB.from("services").delete().eq("id",id);
+toast(r.error?"Error: "+r.error.message:"Listing deleted");await loadServices();render(true)}
+async function uploadAvatar(file){if(!file||!session||!profile)return;
+if(!/^image\/(jpeg|png|webp)$/.test(file.type)){toast("Please choose a JPG, PNG or WebP photo.");return}
+toast("Uploading photo…");
+try{const bm=await createImageBitmap(file),sc=Math.min(1,600/Math.max(bm.width,bm.height)),c=document.createElement("canvas");c.width=Math.round(bm.width*sc);c.height=Math.round(bm.height*sc);c.getContext("2d").drawImage(bm,0,0,c.width,c.height);
+const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.85)),path=session.user.id+"/avatar.jpg";
+const up=await SB.storage.from("media").upload(path,blob,{upsert:true,contentType:"image/jpeg"});if(up.error)throw up.error;
+const url=SB.storage.from("media").getPublicUrl(path).data.publicUrl+"?v="+Date.now();
+const r=await SB.from("profiles").update({avatar_url:url}).eq("id",profile.id);if(r.error)throw r.error;
+await loadMe();await loadServices();render(true);toast("Photo updated ✓")}catch(x){toast("Error: "+(x.message||x))}}
+document.addEventListener("change",e=>{if(e.target.id==="avf")uploadAvatar(e.target.files[0])});
+async function loadInq(){inq=[];if(!profile||!["customer","provider"].includes(profile.role))return;
+const col=profile.role==="provider"?"provider_id":"customer_id";
+const{data}=await SB.from("inquiries").select("id,message,status,created_at,customer_name,customer_contact,services(title),profiles!provider_id(full_name)").eq(col,profile.id).order("created_at",{ascending:false}).limit(50);inq=data||[]}
+function reqSection(){const isP=profile.role==="provider",n=inq.filter(i=>i.status==="new").length,lab={new:"New",contacted:"Contacted",completed:"Completed",declined:"Declined"};
+const dt=i=>new Date(i.created_at).toLocaleDateString("en-NG"),sb=(a,i,t)=>`<button class="btn ghost" style="padding:7px 12px;font-size:13px" data-inq="${a}" data-id="${esc(i.id)}">${t}</button>`;
+const wa=i=>i.customer_contact?`https://wa.me/${encodeURIComponent(i.customer_contact)}?text=${encodeURIComponent("Hi "+(i.customer_name||"")+", about your request on NaijaConnect: "+(i.services?.title||""))}`:"";
+const card=i=>isP?`<div class="card"><b>${esc(i.services?.title||"Service")}</b><span class="mut">From ${esc(i.customer_name||"Customer")} · ${esc(lab[i.status])} · ${dt(i)}</span><div>${esc(i.message)}</div><div class="row" style="justify-content:flex-start;flex-wrap:wrap;gap:8px">${wa(i)?`<a class="btn wa" target="_blank" rel="noopener" href="${wa(i)}">Reply on WhatsApp</a>`:""}${i.status==="new"?sb("contacted",i,"Mark contacted"):""}${i.status==="contacted"?sb("completed",i,"Mark completed"):""}${i.status==="new"||i.status==="contacted"?sb("declined",i,"Decline"):""}</div></div>`:`<div class="card"><b>${esc(i.services?.title||"Service")}</b><span class="mut">To ${esc(i.profiles?.full_name||"provider")} · ${esc(lab[i.status])} · ${dt(i)}</span><div>${esc(i.message)}</div></div>`;
+return`<div class="wrap"><h3>${isP?"Requests received"+(n?` (${n} new)`:""):"My requests"}</h3><div class="grid auto">${inq.map(card).join("")||`<p class="mut">${isP?"No requests yet.":"You haven't sent any requests yet."}</p>`}</div></div>`}
+async function inqAct(b){b.disabled=true;const r=await SB.from("inquiries").update({status:b.dataset.inq}).eq("id",b.dataset.id);toast(r.error?"Error: "+r.error.message:"Updated");await loadInq();render(true)}
+function openReq(sid){if(!session||!profile){toast("Please log in as a customer to send a request.");location.hash="login";return}
+if(profile.role!=="customer"){toast("Only customer accounts can send requests.");return}
+const s=services.find(x=>x.id===sid);if(!s)return;
+const o=document.createElement("div");o.id="rqo";o.style.cssText="position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.6);overflow:auto;padding:16px";
+o.innerHTML=`<form class="panel" id="rq" data-sid="${esc(s.id)}" style="margin-top:40px"><h3 style="margin:0">Request: ${esc(s.title)}</h3><input name="name" required maxlength="100" placeholder="Your name" value="${esc(profile.full_name)}"><input name="contact" required inputmode="numeric" placeholder="Your WhatsApp number e.g. 2348012345678"><textarea name="message" rows="4" required minlength="5" maxlength="1000" placeholder="What do you need? Add your area and preferred time."></textarea><button class="btn">Send request</button><button type="button" class="btn ghost" id="rqx">Cancel</button></form>`;
+document.body.appendChild(o)}
+function admBtn(a,id,t){return`<button class="btn ghost" style="padding:7px 12px;font-size:13px" data-adm="${a}" data-id="${esc(id)}">${t}</button>`}
+async function loadAdmin(){const el=$("#adm");if(!el||!profile||profile.role!=="admin")return;
+const cnt=(t,f)=>{let q=SB.from(t).select("*",{count:"exact",head:true});if(f)q=f(q);return q.then(r=>r.count||0)};
+const[u,p,pe,sv,iq,pr,sr]=await Promise.all([cnt("profiles"),cnt("profiles",q=>q.eq("role","provider")),cnt("profiles",q=>q.eq("role","provider").eq("status","pending")),cnt("services"),cnt("inquiries"),SB.from("profiles").select("id,full_name,role,status,state,whatsapp,created_at").order("created_at",{ascending:false}).limit(100),SB.from("services").select("id,title,state,profiles(full_name)").order("created_at",{ascending:false}).limit(100)]);
+const st=[["Users",u],["Providers",p],["Pending",pe],["Listings",sv],["Inquiries",iq]],users=pr.data||[],svcs=sr.data||[];
+const row=x=>`<div class="card"><b>${esc(x.full_name||"No name")}</b><span class="mut">${esc(x.role)} · ${esc(x.status)}${x.state?" · "+esc(x.state):""}${x.whatsapp?" · "+esc(x.whatsapp):""}</span><div class="row" style="justify-content:flex-start;flex-wrap:wrap">${x.role==="provider"&&x.status!=="approved"?admBtn("approve",x.id,"Approve"):""}${x.role==="provider"&&x.status==="pending"?admBtn("reject",x.id,"Reject"):""}${x.role==="provider"&&x.status==="approved"?admBtn("suspend",x.id,"Suspend"):""}${x.role!=="admin"&&x.id!==profile.id?admBtn("delete",x.id,"Delete user"):""}</div></div>`;
+el.innerHTML=`<div class="grid g2 g5" style="margin-bottom:8px">${st.map(s=>`<div class="cat"><i>${s[1]}</i>${s[0]}</div>`).join("")}</div><h3>Waiting for approval</h3><div class="grid auto">${users.filter(x=>x.role==="provider"&&x.status==="pending").map(row).join("")||'<p class="mut">Nobody waiting.</p>'}</div><h3>All users (newest first)</h3><div class="grid auto">${users.map(row).join("")}</div><h3>All listings</h3><div class="grid auto">${svcs.map(s=>`<div class="card"><b>${esc(s.title)}</b><span class="mut">${esc(s.profiles?.full_name||"")} · ${esc(s.state)}</span><div class="row" style="justify-content:flex-start">${admBtn("rmsvc",s.id,"Remove listing")}</div></div>`).join("")||'<p class="mut">No listings.</p>'}</div>`}
+async function admAct(b){const a=b.dataset.adm,id=b.dataset.id;
+if(a!=="approve"&&b.dataset.sure!=="1"){b.dataset.sure="1";b.dataset.t=b.textContent;b.textContent="Tap again to confirm";setTimeout(()=>{b.dataset.sure="";b.textContent=b.dataset.t},5000);return}
+b.disabled=true;let r;
+if(a==="approve")r=await SB.from("profiles").update({status:"approved"}).eq("id",id);
+if(a==="reject")r=await SB.from("profiles").update({status:"rejected"}).eq("id",id);
+if(a==="suspend")r=await SB.from("profiles").update({status:"suspended"}).eq("id",id);
+if(a==="delete")r=await SB.rpc("admin_delete_user",{target:id});
+if(a==="rmsvc")r=await SB.from("services").delete().eq("id",id);
+toast(r&&r.error?"Error: "+r.error.message:"Done");await loadServices();await loadAdmin()}
+async function loadServices(){const{data}=await SB.from("services").select("id,title,description,price_from,state,city,is_featured,provider_id,categories(name,slug),profiles(full_name,whatsapp,avatar_url)").eq("is_active",true).order("is_featured",{ascending:false}).order("created_at",{ascending:false}).limit(200);services=data||[]}
+async function loadMe(){if(!session){profile=null;favs=[];inq=[];return}const u=session.user.id;const{data}=await SB.from("profiles").select("*").eq("id",u).maybeSingle();profile=data;const f=await SB.from("favourites").select("provider_id").eq("customer_id",u);favs=(f.data||[]).map(x=>x.provider_id);await loadInq()}
+document.addEventListener("click",async e=>{if(e.target.id==="rqx"||e.target.id==="rqo"){const ov=$("#rqo");if(ov)ov.remove();return}const rb=e.target.closest("[data-req]");if(rb){openReq(rb.dataset.req);return}const ib=e.target.closest("[data-inq]");if(ib){inqAct(ib);return}const ob=e.target.closest("[data-own]");if(ob){ownAct(ob);return}const ab=e.target.closest("[data-adm]");if(ab){admAct(ab);return}if(e.target.id==="out"){await SB.auth.signOut();location.hash="home";return}
+const t=e.target.closest("[data-cat],[data-role],[data-fav]");if(!t)return;
+if(t.dataset.cat){F={q:"",cat:t.dataset.cat,state:"",sort:"price"};if(location.hash==="#search")render();else location.hash="search"}
+if(t.dataset.role)setRole(t.dataset.role);
+if(t.dataset.fav){if(!session){location.hash="login";return}if(profile?.role!=="customer"){toast("Only customer accounts can save providers.");return}
+const id=t.dataset.fav,on=favs.includes(id);const r=on?await SB.from("favourites").delete().eq("customer_id",profile.id).eq("provider_id",id):await SB.from("favourites").insert({customer_id:profile.id,provider_id:id});
+if(r.error){toast(r.error.message);return}favs=on?favs.filter(x=>x!==id):favs.concat(id);t.textContent=on?"🤍":"❤️"}});
+document.addEventListener("input",e=>{const m={fq:"q",fc:"cat",fs:"state",fo:"sort"}[e.target.id];if(m){F[m]=e.target.value;results()}});
+document.addEventListener("submit",async e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target)),id=e.target.id,btn=e.target.querySelector("button:last-of-type");
+if(id==="hs"){F={q:f.q,cat:"",state:f.state,sort:"price"};location.hash="search";return}
+if(btn)btn.disabled=true;
+try{if(id==="rq"){const svc=services.find(x=>x.id===e.target.dataset.sid),digits=f.contact.replace(/\D/g,"");if(!svc)throw new Error("Listing not found");if(digits.length<10||digits.length>15)throw new Error("Enter a valid WhatsApp number with country code, e.g. 2348012345678");const{error}=await SB.from("inquiries").insert({service_id:svc.id,customer_id:profile.id,provider_id:svc.provider_id,message:f.message,customer_name:f.name,customer_contact:digits});if(error)throw error;const ov=$("#rqo");if(ov)ov.remove();await loadInq();render(true);toast("Request sent ✓")}
+if(id==="jf"){toast("Creating account…");const{data,error}=await SB.auth.signUp({email:f.email,password:f.password,options:{data:{full_name:f.name,role}}});if(error)throw error;
+if(!data.session){toast("Account created. Check your email to confirm it, then log in.");location.hash="login"}else location.hash="me"}
+if(id==="lf"){toast("Logging in…");const{error}=await SB.auth.signInWithPassword({email:f.email,password:f.password});if(error)throw error;location.hash="me"}
+if(id==="pf"){const{error}=await SB.from("profiles").update({whatsapp:f.wa.replace(/\D/g,""),state:f.state,city:f.city}).eq("id",profile.id);if(error)throw error;await loadMe();await loadServices();render(true);toast("Saved")}
+if(id==="sf2"){toast("Publishing…");const c=cats.find(x=>x.slug===f.cat);if(!c)throw new Error("Categories not loaded. Refresh the page and try again.");const row={category_id:c.id,title:f.title,description:f.desc,price_from:Number(f.price)||null,state:f.state,city:f.city},wasEdit=!!editId;const{error}=wasEdit?await SB.from("services").update(row).eq("id",editId):await SB.from("services").insert({...row,provider_id:profile.id});if(error)throw error;editId=null;await loadServices();render(true);toast(wasEdit?"Changes saved":"Service published")}}
+catch(x){toast(x.message||"Something went wrong")}finally{if(btn)btn.disabled=false}});
+addEventListener("hashchange",()=>render());
+SB.auth.onAuthStateChange((_,s)=>{session=s;setTimeout(async()=>{await loadMe();await loadServices();render(true)},0)});
+(async()=>{render();const c=await SB.from("categories").select("id,name,slug").eq("is_active",true).order("id");cats=c.data||[];await loadServices();render(true)})();
+</script></body></html>
